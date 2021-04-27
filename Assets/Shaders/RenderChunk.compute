@@ -1,0 +1,12 @@
+RWTexture2D<float4> texture_out;
+StructuredBuffer<float4> cell_colors;
+
+#pragma kernel render_chunk
+
+[numthreads(8, 8, 1)]
+void render_chunk(const uint2 id : SV_DispatchThreadID)
+{
+    const float4 color = cell_colors[id.x + id.y * 64];
+    
+    texture_out[id.xy] = color;
+}
