@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using PixelTest.Cells;
 using PixelTest.Extensions;
@@ -9,11 +8,10 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
+using Unity.Mathematics;
 using UnityEngine;
 
 using static Unity.Mathematics.math;
-using int2 = Unity.Mathematics.int2;
-using Random = UnityEngine.Random;
 
 namespace PixelTest
 {
@@ -118,11 +116,13 @@ namespace PixelTest
                     if (key.y > maxY) maxY = key.y;
                 }
 
+                // One random for every processor core
                 var randomGenerator = new NativeArray<Unity.Mathematics.Random>(Environment.ProcessorCount + 1, Allocator.TempJob);
                 for (var i = 0; i < randomGenerator.Length; i++)
                 {
                     randomGenerator[i] = new Unity.Mathematics.Random((uint)random.NextInt());
                 }
+                
                 for (var i = 0; i < 2; i++)
                 {
                     for (int j = 0; j < 2; j++)
